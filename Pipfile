@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+opencv-python = "==4.5.5.64"
+scipy = "==1.7.1"
+numpy = "==1.22.3"
+pyserial = "==3.5"
+tkcalendar = "==1.6.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
+python_full_version = "3.9.5"
