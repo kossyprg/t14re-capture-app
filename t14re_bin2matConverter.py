@@ -22,6 +22,8 @@ class Application(tk.Frame):
         self.N = 0 # number of all files
         self.config = Config()
         self.create_widgets()
+        self.configIsLoaded = False
+        self.dataIsDefined = False
     
     def create_widgets(self):
         frame_config = tk.Frame(self.root,relief=tk.GROOVE,bd=2,padx=10,pady=10)
@@ -50,7 +52,8 @@ class Application(tk.Frame):
         self.progress_remaining_time_label = tk.Label(frame_main)
         self.convert_btn = tk.Button(frame_main,
                                     command=self.main_convert,
-                                    text='Convert')
+                                    text='Convert',
+                                    state='disabled')
 
         # Set frames
         frame_config.grid(row=0,column=0,sticky=tk.NSEW,padx=5,pady=5)
@@ -82,6 +85,9 @@ class Application(tk.Frame):
             self.config_entry.insert(tk.END,self.path_cfg)
             self.config_entry['state'] = 'readonly'
             self.config.load_config(self.path_cfg)
+            self.configIsLoaded = True
+        if self.configIsLoaded and self.dataIsDefined:
+            self.convert_btn['state'] = 'normal'
 
     def choose_data_folder(self):
         current_path = os.getcwd()
@@ -104,6 +110,9 @@ class Application(tk.Frame):
                 self.folder_num_label['text'] = 'Number of files: ' + str(self.N)
                 self.progressbar.configure(maximum=self.N,value=self.n)
                 print('Num of files: ',self.N)
+                self.dataIsDefined = True
+        if self.configIsLoaded and self.dataIsDefined:
+            self.convert_btn['state'] = 'normal'
     
     def convert_data_bin2mat(self):
         self.progress_condition_label['text'] = 'Converting...'
