@@ -14,7 +14,8 @@ class Application(tk.Frame):
     def __init__(self, root=None):
         super().__init__(root)
         root.title('t14re bin2mat converter app')
-        root.geometry('800x400+100+100') # width x height
+        root.geometry('720x350+100+100') # width x height
+        root.resizable(width=False, height=False)
         self.root = root
         self.path_cfg = 0
         self.path_data_folder = 0
@@ -29,13 +30,16 @@ class Application(tk.Frame):
         frame_config = tk.Frame(self.root,relief=tk.GROOVE,bd=2,padx=10,pady=10)
         frame_data_folder = tk.Frame(self.root,relief=tk.GROOVE,bd=2,padx=10,pady=10)
         frame_main = tk.Frame(self.root,relief=tk.GROOVE,bd=2,padx=10,pady=10)
+        frame_close = tk.Frame(self.root,relief=tk.FLAT,bd=0,padx=10,pady=10)
 
+        # =============== frame_config ===============
         # Load config button
         load_config_btn = tk.Button(frame_config)
         load_config_btn['text'] = 'Config file'
         load_config_btn['command'] = self.load_configfile
         self.config_entry = tk.Entry(frame_config,width=100,state=tk.DISABLED)
 
+        # =============== frame_data_folder ===============
         # choose data folder
         choose_folder_btn = tk.Button(frame_data_folder,
                                     text='Folder',
@@ -43,6 +47,7 @@ class Application(tk.Frame):
         self.folder_entry = tk.Entry(frame_data_folder,width=100,state=tk.DISABLED)
         self.folder_num_label = tk.Label(frame_data_folder,text='Number of files: ')
 
+        # =============== frame_main ===============
         # main
         self.progress_condition_label = tk.Label(frame_main)
         self.progressbar = ttk.Progressbar(frame_main,
@@ -55,12 +60,17 @@ class Application(tk.Frame):
                                     text='Convert',
                                     state='disabled')
 
+        # =============== frame_close ===============
+        close_btn = tk.Button(frame_close,text='Close',command=self.close_app)
+
+        # ===== arrangement =====
         # Set frames
         frame_config.grid(row=0,column=0,sticky=tk.NSEW,padx=5,pady=5)
         frame_data_folder.grid(row=1,column=0,sticky=tk.NSEW,padx=5,pady=5)
         frame_main.grid(row=2,column=0,sticky=tk.NSEW,padx=5,pady=5)
+        frame_close.grid(row=3,column=0,sticky=tk.NSEW,padx=5,pady=5)
 
-        # ===== arrangement =====
+        # widgets
         load_config_btn.pack(side=tk.LEFT,padx=5)
         self.config_entry.pack(side=tk.TOP,expand=True,fill=tk.X)
 
@@ -73,6 +83,8 @@ class Application(tk.Frame):
         self.progress_percentage_label.pack(anchor=tk.N)
         self.progress_remaining_time_label.pack(anchor=tk.N)
         self.convert_btn.pack(anchor=tk.N,ipadx=10,ipady=5)
+
+        close_btn.pack(side=tk.TOP)
 
     def load_configfile(self):
         path = os.getcwd()
@@ -179,6 +191,10 @@ class Application(tk.Frame):
         else:
             out_log = str(time_remain) + ' sec remaining'
         return out_log
+    
+    def close_app(self):
+        print('Close app')
+        self.root.destroy()
 
 def main():
     root = tk.Tk()

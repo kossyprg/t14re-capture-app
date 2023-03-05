@@ -4,14 +4,14 @@ from t14re import T14re
 from tkcalendar import DateEntry
 import datetime
 import threading
-import time
 import os
 
 class Application(tk.Frame):
     def __init__(self, root=None):
         super().__init__(root)
         root.title('t14re capture app')
-        root.geometry('800x400+100+100') # width x height
+        root.geometry('800x420+100+100') # width x height
+        root.resizable(width=False, height=False)
         self.root = root
         self.t14re = T14re()
         self.create_widgets()
@@ -22,7 +22,9 @@ class Application(tk.Frame):
         frame_config = tk.Frame(self.root,relief=tk.GROOVE,bd=2,padx=10,pady=10)
         frame_capture = tk.Frame(self.root,relief=tk.GROOVE,bd=2,padx=10,pady=10)
         frame_options = tk.Frame(self.root,relief=tk.GROOVE,bd=2,padx=10,pady=10)
+        frame_close = tk.Frame(self.root,relief=tk.FLAT,bd=0,padx=10,pady=10)
 
+        # =============== frame_connect ===============
         # COM port label
         self.com_label = tk.Label(frame_connect)
         self.com_label['text'] = 'COM: '
@@ -32,6 +34,7 @@ class Application(tk.Frame):
         connect_btn['text'] = 'Connect'
         connect_btn['command'] = self.connect_and_disp_COM_num
 
+        # =============== frame_config ===============
         # config label
         self.config_label = tk.Label(frame_config)
         self.config_label['text'] = 'Config: '
@@ -45,6 +48,7 @@ class Application(tk.Frame):
         self.load_config_btn['command'] = self.load_config_and_setup_radar
         self.load_config_btn['state'] = 'disabled'
 
+        # =============== frame_capture ===============
         # Capture mode selection
         self.capture_mode_list = ('Set max files','Endless mode','Scheduled mode')
         self.capture_mode_combobox = ttk.Combobox(frame_capture,state="readonly")
@@ -52,6 +56,18 @@ class Application(tk.Frame):
         self.capture_mode_combobox.set('Set max files')
         self.capture_mode_combobox.bind("<<ComboboxSelected>>",self.capture_mode_combobox_selected)
 
+        # Run/Reserve button
+        self.run_btn_list = ('Run','Run','Reserve')
+        self.run_btn = tk.Button(frame_capture)
+        self.run_btn['text'] = self.run_btn_list[0]
+        self.run_btn['state'] = 'disabled'
+        self.run_btn['command'] = self.start_capture
+        self.stop_btn = tk.Button(frame_capture)
+        self.stop_btn['text'] = 'Stop'
+        self.stop_btn['state'] = 'disabled'
+        self.stop_btn['command'] = self.stop_capture
+
+        # =============== frame_options ===============
         # Choose folder
         self.choose_folder_btn = tk.Button(frame_options)
         self.choose_folder_btn['text'] = 'Folder'
@@ -92,24 +108,17 @@ class Application(tk.Frame):
         self.end_time_second_combobox = ttk.Combobox(frame_options,values=seconds_list,width=time_width)
         self.end_time_second_combobox.set(seconds_list[0])
 
-        # Run/Reserve button
-        self.run_btn_list = ('Run','Run','Reserve')
-        self.run_btn = tk.Button(frame_capture)
-        self.run_btn['text'] = self.run_btn_list[0]
-        self.run_btn['state'] = 'disabled'
-        self.run_btn['command'] = self.start_capture
-        self.stop_btn = tk.Button(frame_capture)
-        self.stop_btn['text'] = 'Stop'
-        self.stop_btn['state'] = 'disabled'
-        self.stop_btn['command'] = self.stop_capture
+        # =============== frame_close ===============
+        close_btn = tk.Button(frame_close,text='Close',command=self.close_app)
 
+        # ===== arrangement =====
         # grid 
         frame_connect.grid(row=0,column=0,sticky=tk.NSEW,padx=5,pady=5)
         frame_config.grid(row=0,column=1,sticky=tk.NSEW,padx=5,pady=5)
         frame_capture.grid(row=1,column=0,columnspan=2,sticky=tk.NSEW,padx=5,pady=5)
         frame_options.grid(row=2,column=0,columnspan=2,sticky=tk.NSEW,padx=5,pady=5)
+        frame_close.grid(row=3,column=0,columnspan=2,sticky=tk.NSEW,padx=5,pady=5)
 
-        # ===== arrangement =====
         # COM
         self.com_label.pack(side=tk.TOP)
         connect_btn.pack(side=tk.BOTTOM, ipadx=5, ipady=5, padx=10, pady=5)
@@ -155,6 +164,9 @@ class Application(tk.Frame):
         self.end_time_minute_combobox.grid(row=erow,column=5)
         self.label_text_grid(frame_options,row=erow,column=6,text=':')
         self.end_time_second_combobox.grid(row=erow,column=7)
+
+        # close button
+        close_btn.pack(side=tk.TOP,ipadx=5)
     
     def label_text_grid(self,frame,row,column,text):
         label_colon = ttk.Label(frame, text=text)
@@ -230,6 +242,10 @@ class Application(tk.Frame):
     def stop_capture(self):
         print('\nStop!')
         self.t14re.isStopped = True
+
+    def close_app(self):
+        print('Close app')
+        self.root.destroy()
 
 def main():
     root = tk.Tk()
