@@ -5,6 +5,7 @@ t14re-capture-appは，エスタカヤ電子工業株式会社[1]から提供さ
 
 ## t14re_captureApp
 PCとレーダを接続しデータをキャプチャする、本プロジェクトのメインのアプリです。
+![app_overview](https://github.com/kossyprg/t14re-capture-app/assets/60993969/55ccdec8-b797-4990-8f3f-83e5645e8808)
 
 キャプチャ方法は以下の3通りです。
 - 指定されたファイル数（Set max files）
@@ -13,6 +14,7 @@ PCとレーダを接続しデータをキャプチャする、本プロジェク
 
 ## t14re_bin2matConverter
 t14re_captureApp で取得したバイナリのデータを、MATLABで使用できるmatファイルへ変換するアプリです。
+![converter_overview](https://github.com/kossyprg/t14re-capture-app/assets/60993969/1cd509b3-69d1-4388-b748-fbfa7acaf04d)
 
 # ソースコードについて
 exeファイルは、リポジトリにあるpyファイルをpyinstallerで変換することによって得られます。
